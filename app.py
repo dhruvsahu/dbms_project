@@ -77,53 +77,77 @@ def renderClub():
     return render_template('clubLogin.html')
 
 @app.route('/eventType',methods=['GET','POST'])
+# def getEvents():
+#     eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
+
+#     events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
+
+#     types = runQuery("SELECT * FROM event_type;")
+
+#     location = runQuery("SELECT * FROM location")
+
+
+#     if request.method == "GET":
+#         try:
+#             Name = request.form["newEvent"]
+#             fee=request.form["Fee"]
+#             participants = request.form["maxP"]
+#             Type=request.form["EventType"]
+#             Location = request.form["EventLocation"]
+#             Date = request.form['Date']
+#             # UPDATE events SET approval_status = "Approved" WHERE event_id = 1;
+#             # runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
+#             runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
+
+#         except:
+#             EventId=request.form["EventId"]
+#             runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
+# #     print("Hello")
+# #     flag = ""
+# #     if request.method == 'POST':
+# #         event_id = request.args.get('EventId')  # Get the selected event ID
+# #         if request.form['action'] == 'Approve':
+# #             # Handle the Approve action here
+# #             # Perform actions for approval
+# #             # return f"Event {event_id} approved"
+# #             print("Hello")
+# #             flag = "Approved"
+# #             runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(event_id))
+# #         elif request.form['action'] == 'Reject':
+# #             # Handle the Reject action here
+# #             # Perform actions for rejection
+# #             # return f"Event {event_id} rejected"
+# #             print("Hello")
+# #             flag = "Rejected"
+# #             runQuery("UPDATE events SET approval_status = \"Rejected\" WHERE event_id = {}".format(event_id))
+#     return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
 def getEvents():
     eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
-
     events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
-
     types = runQuery("SELECT * FROM event_type;")
-
     location = runQuery("SELECT * FROM location")
 
+    if request.method == "POST":
+        try:
+            Name = request.form["newEvent"]
+            fee=request.form["Fee"]
+            participants = request.form["maxP"]
+            Type=request.form["EventType"]
+            Location = request.form["EventLocation"]
+            Date = request.form['Date']
+            runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
 
-    # if request.method == "GET":
-    #     try:
-    #         # Name = request.form["newEvent"]
-    #         # fee=request.form["Fee"]
-    #         # participants = request.form["maxP"]
-    #         # Type=request.form["EventType"]
-    #         # Location = request.form["EventLocation"]
-    #         # Date = request.form['Date']
-    #         # UPDATE events SET approval_status = "Approved" WHERE event_id = 1;
-    #         runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
-    #         runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
+        except:
+            # Handling the Approve functionality
+            if "EventId" in request.form and "approve_button" in request.form:
+                EventId = request.form["EventId"]
+                runQuery("UPDATE events SET approval_status = 'Approved' WHERE event_id = {}".format(EventId))
+            # Handling the Reject functionality
+            elif "EventId" in request.form and "reject_button" in request.form:
+                EventId = request.form["EventId"]
+                runQuery("DELETE from events WHERE event_id = {}".format(EventId))
 
-    #     except:
-    #         EventId=request.form["EventId"]
-    #         runQuery("DELETE FROM events WHERE event_id={}".format(EventId))
-    flag = ""
-    if request.method == 'POST':
-        event_id = request.args.get('EventId')  # Get the selected event ID
-        if request.form['action'] == 'Approve':
-            # Handle the Approve action here
-            # Perform actions for approval
-            # return f"Event {event_id} approved"
-            print("Hello")
-            flag = "Approved"
-            runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(event_id))
-        elif request.form['action'] == 'Reject':
-            # Handle the Reject action here
-            # Perform actions for rejection
-            # return f"Event {event_id} rejected"
-            print("Hello")
-            flag = "Rejected"
-            runQuery("UPDATE events SET approval_status = \"Rejected\" WHERE event_id = {}".format(event_id))
-        
-        render_template('eventType.html',events = events,eventTypes = eventTypes,types = types,locations = location,flags = flag)
-
-    return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location, flags = flag) 
-
+    return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
 
 @app.route('/eventinfo')
 def rendereventinfo():
@@ -143,6 +167,31 @@ def renderParticipants():
         return render_template('participants.html',events = events,participants=participants)
 
     return render_template('participants.html',events = events)
+
+@app.route('/showRequests',methods=['GET','POST'])
+def renderRequest():
+
+    return render_template('showRequests.html')
+
+@app.route('/registerEvent',methods=['GET','POST'])
+def renderRegisterEvent():
+
+    return render_template('registerEvent.html')
+
+@app.route('/bookroom',methods=['GET','POST'])
+def renderBookRoom():
+    if request.method=="POST":
+        ClubName=request.form["ClubName"]
+        Room=request.form["roomno"]
+        Date=request.form["Date"]
+        StartTime=request.form["StartTime"]
+        EndTime=request.form["EndTime"]
+        Purpose=request.form["Purpose"]
+        runQuery("INSERT INTO room_booking(room_id,date,time,purpose) VALUES({},\'{}\',\'{}\',\'{}\');".format(Room,Date,Time,Purpose))
+        return render_template('bookroom.html',errors=["Room Booked Successfully!"])
+
+    return render_template('bookroom.html')
+
 
 def runQuery(query):
 
