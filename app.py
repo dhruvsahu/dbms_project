@@ -122,10 +122,11 @@ def renderClub():
 # #             runQuery("UPDATE events SET approval_status = \"Rejected\" WHERE event_id = {}".format(event_id))
 #     return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
 def getEvents():
-    eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
-    events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
-    types = runQuery("SELECT * FROM event_type;")
-    location = runQuery("SELECT * FROM location")
+    # eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
+    # events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
+    # types = runQuery("SELECT * FROM event_type;")
+    # location = runQuery("SELECT * FROM location")
+    events = runQuery("SELECT * FROM events;")
 
     if request.method == "POST":
         try:
@@ -146,12 +147,17 @@ def getEvents():
             elif "EventId" in request.form and "reject_button" in request.form:
                 EventId = request.form["EventId"]
                 runQuery("DELETE from events WHERE event_id = {}".format(EventId))
+                runQuery("SELECT * FROM events;")
+            return render_template('events.html',events = events)
+            
 
-    return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
+    # return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
+    return render_template('events.html',events = events)
+
 
 @app.route('/eventinfo')
 def rendereventinfo():
-    events=runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E LEFT JOIN event_type USING(type_id) LEFT JOIN location USING(location_id) WHERE approval_status =\"Approved\";")
+    events=runQuery("SELECT * from events WHERE approval_status =\"Approved\";")
 
     return render_template('events_info.html',events = events)
 
@@ -175,6 +181,17 @@ def renderRequest():
 
 @app.route('/registerEvent',methods=['GET','POST'])
 def renderRegisterEvent():
+    if request.method=="POST":
+        EventName=request.form["EventName"]
+        ClubName=request.form["ClubName"]
+        Date=request.form["Date"]
+        StartTime=request.form["StartTime"]
+        EndTime=request.form["EndTime"]
+        Venue=request.form["Venue"]
+        RegistrationFee=request.form["RegistrationFee"]
+        Description=request.form["EventDescription"]
+        runQuery("call insert_event(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',{},\'{}\');".format(EventName,ClubName,Date,StartTime,EndTime,Venue,RegistrationFee,Description))
+        return render_template('registerEvent.html',errors=["Event Registered Successfully!"])
 
     return render_template('registerEvent.html')
 
@@ -186,8 +203,9 @@ def renderBookRoom():
         Date=request.form["Date"]
         StartTime=request.form["StartTime"]
         EndTime=request.form["EndTime"]
-        Purpose=request.form["Purpose"]
-        runQuery("INSERT INTO room_booking(room_id,date,time,purpose) VALUES({},\'{}\',\'{}\',\'{}\');".format(Room,Date,Time,Purpose))
+        AcadBlock=request.form["Venue"]
+        Description=request.form["Description"]
+        runQuery("call insert_roombooking(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');".format(ClubName,AcadBlock,Room,Date,StartTime,EndTime,Description))
         return render_template('bookroom.html',errors=["Room Booked Successfully!"])
 
     return render_template('bookroom.html')
@@ -196,7 +214,7 @@ def renderBookRoom():
 def runQuery(query):
 
     try:
-        db = mysql.connector.connect( host='localhost',database='dbms2023',user='root',password='India2017@')
+        db = mysql.connector.connect( host='localhost',database='dbmsproj',user='root',password='mysql@123')
 
         if db.is_connected():
             print("Connected to MySQL, running query: ", query)

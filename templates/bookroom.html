@@ -81,22 +81,22 @@
                   name="Venue"
                   class="form-control w-100 border border-dark"
                   id="inlineFormCustomSelect"
+                  aria-describedby="AcadBlock"
+                  placeholder="Select Block"
                 >
-                  <option selected>Select Block</option>
-                  <option value="C_block">C Block</option>
-                  <option value="D_block">D Block</option>
+                  <option selected value="Select">Select Block</option>
+                  <option value="C">C Block</option>
+                  <option value="D">D Block</option>
                 </select>
               </div>
               <br />
               <div class="form-group rounded">
-                <label class="h4" for="inlineFormCustomSelect"
-                  >Room</label
-                >
-                <select
+                <label class="h4" for="inlineFormCustomSelect">Room</label>
+                <!-- <select
                   name="RoomNumber"
                   class="form-control w-100 border border-dark"
                   id="inlineFormCustomSelect"
-                >
+                > -->
                 <input 
                     name="roomno"
                     type="room"
@@ -111,7 +111,19 @@
                   <option value="003">003</option>
                   <option value="004">004</option>
                   <option value="005">005</option> -->
-                </select>
+                <!-- </select> -->
+              </div>
+              <br />
+              <div class="form-group rounded">
+                <label class="h4" for="inlineFormCustomSelect">Description</label>
+                <input 
+                    name="Description"
+                    type="desc"
+                    class="form-control border border-dark"
+                    id="desc"
+                    aria-describedby="Description"
+                    placeholder="Enter Description"
+                >
               </div>
 
               <br />
