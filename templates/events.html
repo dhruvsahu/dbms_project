@@ -71,14 +71,14 @@
         </table>
 
         <div class="row" style="align-items: center;display: flex; justify-content: center;">
-            <div class="col-md-3" > 
+            <!-- <div class="col-md-3" > 
                 <button id="addbtn" type="button" class="mb-5 btn btn-primary btn-lg" >
                     + Add new Event
                 </button>
-            </div>
+            </div> -->
             <div class="col-md-6"id="deldiv" >
                 <button id="delbtn" type="button" class="mb-5 btn btn-danger btn-lg">
-                    Delete Event
+                    Manage Events
                 </button>
             </div>
             <div class="col-md-9" style="display:contents">
@@ -88,28 +88,78 @@
             </div>
         </div>
 
-        <div class="bg-dark text-dark "
-            style="align-items:center; display: flex; justify-content: center;display: none;background-color: #f1faee;height:20%;border-radius:10px;"
-            id="delevent">
-            <form method="post" style="width:45vw;min-height:20vw;">
+        <!-- <div class="bg-dark text-dark" style="align-items:center; display: flex; justify-content: center; display: none; background-color: #f1faee; height: 20%; border-radius: 10px;" id="delevent">
+            <form method="post" style="width:45vw; min-height:20vw;" id="eventForm">
                 <div class="form-group rounded" style="text-align:center;">
-                    <label style="margin-top:4%;margin-bottom:5%;;font-style:Trebuchet MS;color:antiquewhite" class="h2"
-                        for="inlineFormCustomSelect">Delete Event </label>
+                    <label style="margin-top:4%; margin-bottom:5%; font-style:Trebuchet MS; color:antiquewhite" class="h2" for="inlineFormCustomSelect">Manage Event </label>
                     <select name="EventId" class="form-control w-100 border border-dark">
-                        <option selected>Select Event to Delete</option>
+                        <option selected>Select Event</option>
                         {% for event in events %}
-                        <option value="{{event[0]}}">{{event[1]}}</option>
+                        <option value="{{ event[0] }}">{{ event[1] }}</option>
                         {% endfor %}
                     </select>
                 </div>
-                <div style="margin-top:3%;align-items: center;display:flex;justify-content:center;">
-                    <button style="width:20%;margin-top:2%;margin-bottom:5%;align-items: center;display: flex; justify-content: center;font-weight:bolder;"
-                        type="submit" class="btn btn-primary border border-dark">
-                        Delete
+                <div style="margin-top:3%; align-items: center; display:flex; justify-content:center;">
+                    <button style="width:20%; margin-top:2%; margin-bottom:5%; align-items: center; display: flex; justify-content: center; font-weight:bolder;" type="button" class="btn btn-primary border border-dark" onclick="approveEvent()">
+                        Approve
+                    </button>
+                    <button style="width:20%; margin-top:2%; margin-bottom:5%; align-items: center; display: flex; justify-content: center; font-weight:bolder;" type="button" class="btn btn-primary border border-dark" onclick="rejectEvent()">
+                        Reject
                     </button>
                 </div>
             </form>
+        </div> -->
+        <div class="bg-dark text-dark" style="align-items:center; display: flex; justify-content: center; display: none; background-color: #f1faee; height: 20%; border-radius: 10px;" id="delevent">
+            <form method="post" style="width:45vw; min-height:20vw;" id="eventForm">
+                <div class="form-group rounded" style="text-align:center;">
+                    <label style="margin-top:4%; margin-bottom:5%; font-style:Trebuchet MS; color:antiquewhite" class="h2" for="inlineFormCustomSelect">Manage Event </label>
+                    <select name="EventId" class="form-control w-100 border border-dark">
+                        <option selected>Select Event</option>
+                        {% for event in events %}
+                        <option value="{{ event[0] }}">{{ event[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div style="margin-top:3%; align-items: center; display:flex; justify-content:center;">
+                    <button style="width:20%; margin-top:2%; margin-bottom:5%; align-items: center; display: flex; justify-content: center; font-weight:bolder;" type="button" class="btn btn-primary border border-dark" onclick="approveEvent()">
+                        Approve
+                    </button>
+                    <button style="width:20%; margin-top:2%; margin-bottom:5%; align-items: center; display: flex; justify-content: center; font-weight:bolder;" type="button" class="btn btn-primary border border-dark" onclick="rejectEvent()">
+                        Reject
+                    </button>
+                </div>
+            </form>
+            <!-- Display area for message -->
+            <div id="messageDisplay" style="display: none; margin-top: 20px;">
+                <p id="messageText">{% for flag in flags %}
+                    {{flag}}
+                {% endfor %}</p>
+            </div>
         </div>
+        
+        <script>
+            function approveEvent() {
+                var eventForm = document.getElementById('eventForm');
+                var selectedEvent = eventForm.elements['EventId'].value;
+        
+                // Perform actions for approval
+                var messageDisplay = document.getElementById('messageDisplay');
+                var messageText = document.getElementById('messageText');
+                messageText.innerText = `Event ${selectedEvent} approved`;
+                messageDisplay.style.display = 'block';
+            }
+        
+            function rejectEvent() {
+                var eventForm = document.getElementById('eventForm');
+                var selectedEvent = eventForm.elements['EventId'].value;
+        
+                // Perform actions for rejection
+                var messageDisplay = document.getElementById('messageDisplay');
+                var messageText = document.getElementById('messageText');
+                messageText.innerText = `Event ${selectedEvent} rejected`;
+                messageDisplay.style.display = 'block';
+            }
+        </script>
 
         <div class="row" style="display: none;" id="eventname">
             <div class="col-md-4">

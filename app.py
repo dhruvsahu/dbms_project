@@ -60,7 +60,21 @@ def renderAdmin():
 
     return render_template('admin.html')    
 
+@app.route('/clubLogin',methods=['GET','POST'])
+def renderClub():
+    if request.method == 'POST':
+        UN = request.form['username']
+        PS = request.form['password']
 
+        cred = runQuery("SELECT * FROM club")
+        print(cred)
+        for user in cred:
+            if UN==user[0] and PS==user[1]:
+                return redirect('/eventinfo')
+
+        return render_template('club.html',errors=["Wrong Username/Password"])
+
+    return render_template('clubLogin.html')
 
 @app.route('/eventType',methods=['GET','POST'])
 def getEvents():
@@ -73,27 +87,47 @@ def getEvents():
     location = runQuery("SELECT * FROM location")
 
 
-    if request.method == "POST":
-        try:
+    # if request.method == "GET":
+    #     try:
+    #         # Name = request.form["newEvent"]
+    #         # fee=request.form["Fee"]
+    #         # participants = request.form["maxP"]
+    #         # Type=request.form["EventType"]
+    #         # Location = request.form["EventLocation"]
+    #         # Date = request.form['Date']
+    #         # UPDATE events SET approval_status = "Approved" WHERE event_id = 1;
+    #         runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
+    #         runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
 
-            Name = request.form["newEvent"]
-            fee=request.form["Fee"]
-            participants = request.form["maxP"]
-            Type=request.form["EventType"]
-            Location = request.form["EventLocation"]
-            Date = request.form['Date']
-            runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
+    #     except:
+    #         EventId=request.form["EventId"]
+    #         runQuery("DELETE FROM events WHERE event_id={}".format(EventId))
+    flag = ""
+    if request.method == 'POST':
+        event_id = request.args.get('EventId')  # Get the selected event ID
+        if request.form['action'] == 'Approve':
+            # Handle the Approve action here
+            # Perform actions for approval
+            # return f"Event {event_id} approved"
+            print("Hello")
+            flag = "Approved"
+            runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(event_id))
+        elif request.form['action'] == 'Reject':
+            # Handle the Reject action here
+            # Perform actions for rejection
+            # return f"Event {event_id} rejected"
+            print("Hello")
+            flag = "Rejected"
+            runQuery("UPDATE events SET approval_status = \"Rejected\" WHERE event_id = {}".format(event_id))
+        
+        render_template('eventType.html',events = events,eventTypes = eventTypes,types = types,locations = location,flags = flag)
 
-        except:
-            EventId=request.form["EventId"]
-            runQuery("DELETE FROM events WHERE event_id={}".format(EventId))
-
-    return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
+    return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location, flags = flag) 
 
 
 @app.route('/eventinfo')
 def rendereventinfo():
-    events=runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E LEFT JOIN event_type USING(type_id) LEFT JOIN location USING(location_id);")
+    events=runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E LEFT JOIN event_type USING(type_id) LEFT JOIN location USING(location_id) WHERE approval_status =\"Approved\";")
 
     return render_template('events_info.html',events = events)
 
