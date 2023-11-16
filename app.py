@@ -3,7 +3,9 @@ import datetime
 from mysql.connector import Error
 from flask import Flask, request, jsonify, render_template,redirect, url_for
 from random import randint
+import os
 
+sql_pass = os.environ['sql_pass']
 
 app = Flask(__name__)
 
@@ -54,7 +56,6 @@ def renderAdmin():
         print(cred)
         for user in cred:
             if UN==user[0] and PS==user[1]:
-                # return redirect('/eventType')
                 return redirect('/select')
 
         return render_template('admin.html',errors=["Wrong Username/Password"])
@@ -100,7 +101,6 @@ def renderMeetings():
             return render_template('meetings.html',meets = meets)
             
 
-    # return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
     return render_template('meetings.html',meets = meets)
 
 
@@ -113,63 +113,15 @@ def renderClub():
         cred = runQuery("SELECT * FROM club")
         print(cred)
         for user in cred:
-            if UN==user[0] and PS==user[1]:
-                return redirect('/eventinfo')
+            if UN==user[1] and PS==user[2]:
+                return redirect('/club')
 
-        return render_template('club.html',errors=["Wrong Username/Password"])
+        return render_template('clubLogin.html',errors=["Wrong Username/Password"])
 
     return render_template('clubLogin.html')
 
 @app.route('/events',methods=['GET','POST'])
-# def getEvents():
-#     eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
-
-#     events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
-
-#     types = runQuery("SELECT * FROM event_type;")
-
-#     location = runQuery("SELECT * FROM location")
-
-
-#     if request.method == "GET":
-#         try:
-#             Name = request.form["newEvent"]
-#             fee=request.form["Fee"]
-#             participants = request.form["maxP"]
-#             Type=request.form["EventType"]
-#             Location = request.form["EventLocation"]
-#             Date = request.form['Date']
-#             # UPDATE events SET approval_status = "Approved" WHERE event_id = 1;
-#             # runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
-#             runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
-
-#         except:
-#             EventId=request.form["EventId"]
-#             runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(EventId))
-# #     print("Hello")
-# #     flag = ""
-# #     if request.method == 'POST':
-# #         event_id = request.args.get('EventId')  # Get the selected event ID
-# #         if request.form['action'] == 'Approve':
-# #             # Handle the Approve action here
-# #             # Perform actions for approval
-# #             # return f"Event {event_id} approved"
-# #             print("Hello")
-# #             flag = "Approved"
-# #             runQuery("UPDATE events SET approval_status = \"Approved\" WHERE event_id = {}".format(event_id))
-# #         elif request.form['action'] == 'Reject':
-# #             # Handle the Reject action here
-# #             # Perform actions for rejection
-# #             # return f"Event {event_id} rejected"
-# #             print("Hello")
-# #             flag = "Rejected"
-# #             runQuery("UPDATE events SET approval_status = \"Rejected\" WHERE event_id = {}".format(event_id))
-#     return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
 def getEvents():
-    # eventTypes = runQuery("SELECT *,(SELECT COUNT(*) FROM participants AS P WHERE T.type_id IN (SELECT type_id FROM events AS E WHERE E.event_id = P.event_id ) ) AS COUNT FROM event_type AS T;") 
-    # events = runQuery("SELECT event_id,event_title,(SELECT COUNT(*) FROM participants AS P WHERE P.event_id = E.event_id ) AS count FROM events AS E;")
-    # types = runQuery("SELECT * FROM event_type;")
-    # location = runQuery("SELECT * FROM location")
     events = runQuery("SELECT * FROM events;")
 
     if request.method == "POST":
@@ -195,32 +147,31 @@ def getEvents():
             return render_template('events.html',events = events)
             
 
-    # return render_template('events.html',events = events,eventTypes = eventTypes,types = types,locations = location) 
     return render_template('events.html',events = events)
 
 
-@app.route('/eventinfo')
-def rendereventinfo():
-    events=runQuery("SELECT * from events WHERE approval_status =\"Approved\";")
+# @app.route('/eventinfo')
+# def rendereventinfo():
+#     events=runQuery("SELECT * from events WHERE approval_status =\"Approved\";")
 
-    return render_template('events_info.html',events = events)
+#     return render_template('events_info.html',events = events)
 
-@app.route('/participants',methods=['GET','POST'])
-def renderParticipants():
-    
-    events = runQuery("SELECT * FROM events;")
-
-    if request.method == "POST":
-        Event = request.form['Event']
-
-        participants = runQuery("SELECT p_id,fullname,mobile,email FROM participants WHERE event_id={}".format(Event))
-        return render_template('participants.html',events = events,participants=participants)
-
-    return render_template('participants.html',events = events)
+@app.route('/club',methods=['GET','POST'])
+def renderClubPage():
+    if request.method == 'POST':
+        if request.form['action'] == 'showRequests':
+            return redirect('/showRequests')
+        elif request.form['action'] == 'registerEvent':
+            return redirect('/registerEvent')
+        elif request.form['action'] == 'bookroom':
+            return redirect('/bookroom')
+        else:
+            return "Invalid action"
+    return render_template('club.html')
 
 @app.route('/showRequests',methods=['GET','POST'])
 def renderRequest():
-
+    events = runQuery("SELECT Name FROM club WHERE Club_id==")
     return render_template('showRequests.html')
 
 @app.route('/registerEvent',methods=['GET','POST'])
@@ -258,7 +209,7 @@ def renderBookRoom():
 def runQuery(query):
 
     try:
-        db = mysql.connector.connect( host='localhost',database='dbmsproj',user='root',password='India2017@')
+        db = mysql.connector.connect( host='localhost',database='dbmsproj',user='root',password=sql_pass)
 
         if db.is_connected():
             print("Connected to MySQL, running query: ", query)

@@ -13,25 +13,18 @@
   </head>
   <body style="background-color: #a9def9">
     <div class="row bg-dark text-light">
-      <a
-        href="/registerEvent"
-        class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white"
-        type="submit"
-        >Register Event</a
-      >
-      <a
-        href="/bookroom"
-        class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white"
-        type="submit"
-        >Book a Room</a
-      >
-      <a
-        href="/showRequests"
-        class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white"
-        type="submit"
-        >Show Request</a
-      >
-    </div>
+      <form action="/club" method="post">
+          <button name="action" value="registerEvent" class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white" type="submit">
+              Register Event
+          </button>
+          <button name="action" value="bookroom" class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white" type="submit">
+              Book a Room
+          </button>
+          <button name="action" value="showRequests" class="btn btn-outline-primary my-2 mx-4 my-sm-0 bg-primary text-white" type="submit">
+              Show Request
+          </button>
+      </form>
+  </div>
 
     <!-- <script type="text/javascript" src="{{ url_for('static',filename='app.js') }}"></script> -->
     <script
