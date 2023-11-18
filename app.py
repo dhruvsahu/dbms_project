@@ -1,14 +1,14 @@
 import mysql.connector,sys
 import datetime
 from mysql.connector import Error
-from flask import Flask, request, jsonify, render_template,redirect, url_for
-from random import randint
+from flask import Flask, request, session, render_template,redirect, url_for
+
 import os
 
 sql_pass = os.environ['sql_pass']
 
 app = Flask(__name__)
-
+app.secret_key = 'your_secret_key_here'
 
 @app.route('/',methods=['GET', 'POST'])
 def renderLoginPage():
@@ -114,6 +114,7 @@ def renderClub():
         print(cred)
         for user in cred:
             if UN==user[1] and PS==user[2]:
+                session['username'] = UN
                 return redirect('/club')
 
         return render_template('clubLogin.html',errors=["Wrong Username/Password"])
@@ -150,12 +151,6 @@ def getEvents():
     return render_template('events.html',events = events)
 
 
-# @app.route('/eventinfo')
-# def rendereventinfo():
-#     events=runQuery("SELECT * from events WHERE approval_status =\"Approved\";")
-
-#     return render_template('events_info.html',events = events)
-
 @app.route('/club',methods=['GET','POST'])
 def renderClubPage():
     if request.method == 'POST':
@@ -171,8 +166,9 @@ def renderClubPage():
 
 @app.route('/showRequests',methods=['GET','POST'])
 def renderRequest():
-    events = runQuery("SELECT Name FROM club WHERE Club_id==")
-    return render_template('showRequests.html')
+    username = session['username']
+    events = runQuery("SELECT * FROM events WHERE Club_Name = \'{}\';".format(username))
+    return render_template('showRequests.html',events = events)
 
 @app.route('/registerEvent',methods=['GET','POST'])
 def renderRegisterEvent():

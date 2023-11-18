@@ -35,7 +35,7 @@
       class="text-dark"
     >
       <h1 style="text-align: center; color:#FFD662">
-        About Events &#128526;
+        Events Request;
       </h1>
     </div>
     <br />
@@ -52,7 +52,7 @@
         border-width: 5px;
       "
     >
-      <div class="card mb-3" style="width: 60rem;background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);">
+      <!-- <div class="card mb-3" style="width: 60rem;background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);">
         <div
           style="align-items: center; display: flex; justify-content: center;color: #FFD662;"
           class="h1 card-header bg-transparent"
@@ -98,6 +98,18 @@
         >
         <b style="color: #FFD662;" ">Max Participants:</b>&nbsp; {{event[5]}}
         </div>
+      </div> -->
+      <div class="event">
+        <h2>{{ event[1] }}</h2> <!-- Display the event name -->
+        <p>Event ID: {{ event[0] }}</p>
+        <p>Club Name: {{ event[2] }}</p>
+        <p>Date: {{ event[3] }}</p>
+        <p>Start Time: {{ event[4] }}</p>
+        <p>End Time: {{ event[5] }}</p>
+        <p>Venue: {{ event[6] }}</p>
+        <p>Registration Fee: {{ event[7] }}</p>
+        <p>Description: {{ event[8] }}</p>
+        <p>Approval Status: {{ event[9] }}</p>
       </div>
     </div>
     <br />
