@@ -1,7 +1,5 @@
-import mysql.connector,sys
-import datetime
-from mysql.connector import Error
-from flask import Flask, request, session, render_template,redirect, url_for
+import mysql.connector
+from flask import Flask, request, session, render_template,redirect
 
 import os
 
@@ -13,31 +11,7 @@ app.secret_key = 'your_secret_key_here'
 @app.route('/',methods=['GET', 'POST'])
 def renderLoginPage():
     events = runQuery("SELECT * FROM events")
-    branch =  runQuery("SELECT * FROM branch")
-    if request.method == 'POST':
-        Name = request.form['FirstName'] + " " + request.form['LastName']
-        Mobile = request.form['MobileNumber']
-        Branch_id = request.form['Branch']
-        Event = request.form['Event']
-        Email = request.form['Email']
-
-        if len(Mobile) != 10:
-            return render_template('loginfail.html',errors = ["Invalid Mobile Number!"])
-
-        if Email[-4:] != '.com':
-            return render_template('loginfail.html', errors = ["Invalid Email!"])
-
-        if len(runQuery("SELECT * FROM participants WHERE event_id={} AND mobile={}".format(Event,Mobile))) > 0 :
-            return render_template('loginfail.html', errors = ["Student already Registered for the Event!"])
-
-        if runQuery("SELECT COUNT(*) FROM participants WHERE event_id={}".format(Event)) >= runQuery("SELECT participants FROM events WHERE event_id={}".format(Event)):
-            return render_template('loginfail.html', errors = ["Participants count fullfilled Already!"])
-
-        runQuery("INSERT INTO participants(event_id,fullname,email,mobile,college,branch_id) VALUES({},\"{}\",\"{}\",\"{}\",\"COEP\",\"{}\");".format(Event,Name,Email,Mobile,Branch_id))
-
-        return render_template('index.html',events = events,branchs = branch,errors=["Succesfully Registered!"])
-
-    return render_template('index.html',events = events,branchs = branch)
+    return render_template('index.html',events = events)
     
 
 
@@ -61,6 +35,11 @@ def renderAdmin():
         return render_template('admin.html',errors=["Wrong Username/Password"])
 
     return render_template('admin.html')    
+
+@app.route('/events_info',methods=['GET','POST'])
+def renderEventsInfo():
+    events = runQuery("SELECT * FROM events where Approval_Status=\"Approved\";")
+    return render_template('events_info.html',events = events)
 
 @app.route('/select',methods=['GET','POST'])
 def renderSelect():
@@ -89,11 +68,9 @@ def renderMeetings():
             runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
 
         except:
-            # Handling the Approve functionality
             if "EventId" in request.form and "approve_button" in request.form:
                 EventId = request.form["EventId"]
                 runQuery("UPDATE events SET approval_status = 'Approved' WHERE event_id = {}".format(EventId))
-            # Handling the Reject functionality
             elif "EventId" in request.form and "reject_button" in request.form:
                 EventId = request.form["EventId"]
                 runQuery("DELETE from events WHERE event_id = {}".format(EventId))
@@ -136,11 +113,9 @@ def getEvents():
             runQuery("INSERT INTO events(event_title,event_price,participants,type_id,location_id,date) VALUES(\"{}\",{},{},{},{},\'{}\');".format(Name,fee,participants,Type, Location,Date))
 
         except:
-            # Handling the Approve functionality
             if "EventId" in request.form and "approve_button" in request.form:
                 EventId = request.form["EventId"]
                 runQuery("UPDATE events SET approval_status = 'Approved' WHERE event_id = {}".format(EventId))
-            # Handling the Reject functionality
             elif "EventId" in request.form and "reject_button" in request.form:
                 EventId = request.form["EventId"]
                 runQuery("DELETE from events WHERE event_id = {}".format(EventId))
@@ -200,6 +175,7 @@ def renderBookRoom():
         return render_template('bookroom.html',errors=["Room Booked Successfully!"])
 
     return render_template('bookroom.html')
+
 
 
 def runQuery(query):

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -43,6 +43,62 @@
                 Approve Events
             </button>
         </form>
+    </div>
+  </body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Select Page</title>
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap"
+    />
+    <style>
+      body {
+        background-color: #254e58; /* Updated background color */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        font-family: "Inter", sans-serif; /* Added font-family */
+      }
+      .container {
+        background-color: #333;
+        padding: 40px; /* Increased padding */
+        border-radius: 20px; /* Increased border-radius */
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.7); /* Increased box-shadow and adjusted color */
+      }
+      button {
+        background-color: #4caf50;
+        color: white;
+        padding: 20px 40px; /* Increased padding */
+        border: none;
+        border-radius: 12px; /* Increased border-radius */
+        margin: 15px; /* Increased margin */
+        cursor: pointer;
+        font-size: 18px; /* Increased font size */
+        font-weight: bold; /* Added font weight */
+        text-shadow: 0 0 10px rgba(0, 255, 0, 0.5); /* Added text glow effect */
+      }
+      button:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <form action="/select" method="post">
+        <button name="action" value="meetings" type="submit">
+          Approve Meetings
+        </button>
+        <button name="action" value="events" type="submit">
+          Approve Events
+        </button>
+      </form>
     </div>
   </body>
 </html>

@@ -35,84 +35,44 @@
       class="text-dark"
     >
       <h1 style="text-align: center; color:#FFD662">
-        Events Request;
+        Events Request
       </h1>
     </div>
     <br />
     <br />
-    {% for event in events %}
-    <div
-      style="
-        align-items: center;
-        display: flex;
-        justify-content: center;
-        border-radius: 30%;
-        color: #D81159;
-        border-color: #182848;
-        border-width: 5px;
-      "
-    >
-      <!-- <div class="card mb-3" style="width: 60rem;background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);">
-        <div
-          style="align-items: center; display: flex; justify-content: center;color: #FFD662;"
-          class="h1 card-header bg-transparent"
-        >
-          {{event[3]}}
-        </div>
-        <div class="card-body">
-          <h5
-            class="card-title"
-            style="align-items: center; display: flex; justify-content: center;color:#EEA47f"
-          >
-            <b style="color: #FFD662;" ">{{event[3]}}</b>&nbsp;is a flagship {{event[7]}} event of College
-            of engineering Pune
-          </h5>
-        </div>
-        <div
-          class="card-footer bg-transparent"
-          style="align-items: center; display: flex; justify-content: center;color: #EEA47f;"
-        >
-        <b style="color: #FFD662;" ">Venue:</b>&nbsp; {{event[8]}}
-        </div>
-        <div
-        class="card-footer bg-transparent"
-        style="align-items: center; display: flex; justify-content: center;color: #EEA47f;"
-      >
-      <b style="color: #FFD662;" ">Date:</b>&nbsp; {{event[6]}}
-      </div>
-        <div
-          class="card-footer bg-transparent"
-          style="align-items: center; display: flex; justify-content: center;color: #EEA47f;"
-        >
-        <b style="color: #FFD662;" ">Registration fee:</b>&nbsp; &#8377;{{event[4]}}
-        </div>
-        <div
-          class="card-footer bg-transparent"
-          style="align-items: center; display: flex; justify-content: center;color: #EEA47f;"
-        >
-        <b style="color: #FFD662;" ">Current Participants:</b>&nbsp; {{event[9]}}
-        </div>
-        <div
-          class="card-footer bg-transparent"
-          style="align-items: center; display: flex; justify-content: center;color: #EEA47f;"
-        >
-        <b style="color: #FFD662;" ">Max Participants:</b>&nbsp; {{event[5]}}
-        </div>
-      </div> -->
-      <div class="event">
-        <h2>{{ event[1] }}</h2> <!-- Display the event name -->
-        <p>Event ID: {{ event[0] }}</p>
-        <p>Club Name: {{ event[2] }}</p>
-        <p>Date: {{ event[3] }}</p>
-        <p>Start Time: {{ event[4] }}</p>
-        <p>End Time: {{ event[5] }}</p>
-        <p>Venue: {{ event[6] }}</p>
-        <p>Registration Fee: {{ event[7] }}</p>
-        <p>Description: {{ event[8] }}</p>
-        <p>Approval Status: {{ event[9] }}</p>
-      </div>
+    <div style="align-items: center; display: flex; justify-content: center;">
+      <table class="table" style="width: 80%;">
+        <thead>
+          <tr>
+            <th>Event ID</th>
+            <th>Event Name</th>
+            <th>Club Name</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Venue</th>
+            <th>Registration Fee</th>
+            <th>Description</th>
+            <th>Approval Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for event in events %}
+          <tr>
+            <td>{{ event[0] }}</td>
+            <td>{{ event[1] }}</td>
+            <td>{{ event[2] }}</td>
+            <td>{{ event[3] }}</td>
+            <td>{{ event[4] }}</td>
+            <td>{{ event[5] }}</td>
+            <td>{{ event[6] }}</td>
+            <td>{{ event[7] }}</td>
+            <td>{{ event[8] }}</td>
+            <td>{{ event[9] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
-    <br />
-    {% endfor %}
   </body>
 </html>
