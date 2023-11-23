@@ -35,7 +35,7 @@
       class="text-dark"
     >
       <h1 style="text-align: center; color:#FFD662">
-        Events Request
+        Events and Room Request
       </h1>
     </div>
     <br />
@@ -69,6 +69,40 @@
             <td>{{ event[7] }}</td>
             <td>{{ event[8] }}</td>
             <td>{{ event[9] }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <br>
+    <br>
+    <div style="align-items: center; display: flex; justify-content: center;">
+      <table class="table" style="width: 80%;">
+        <thead>
+          <tr>
+            <th>Booking ID</th>
+            <th>Club Name</th>
+            <th>Acad Block</th>
+            <th>Room No.</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Description</th>
+            <th>Approval Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for room in rooms %}
+          <tr>
+            <td>{{ room[0] }}</td>
+            <td>{{ room[1] }}</td>
+            <td>{{ room[2] }}</td>
+            <td>{{ room[3] }}</td>
+            <td>{{ room[4] }}</td>
+            <td>{{ room[5] }}</td>
+            <td>{{ room[6] }}</td>
+            <td>{{ room[7] }}</td>
+            <td>{{ room[8] }}</td>
           </tr>
           {% endfor %}
         </tbody>

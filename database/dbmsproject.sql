@@ -111,6 +111,17 @@ END IF;
 END //
 delimiter ;
 
+delimiter //
+
+CREATE TRIGGER addinfo
+AFTER UPDATE on events
+FOR EACH ROW
+BEGIN 
+IF new.Approval_Status = "Approved" THEN
+UPDATE booking SET Approval_Status = "Approved" AND Last_Update = CURTIME() WHERE Booking_ID = new.Event_ID;
+END IF;
+END //
+delimiter ;
 
 
 
@@ -145,10 +156,3 @@ INSERT INTO roombooking(Club_Name, Acad_Block, Room_No, Date, Start_Time,End_Tim
 END //
 
 Delimiter ;
-
-
-
-
-
-
-

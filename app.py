@@ -143,7 +143,8 @@ def renderClubPage():
 def renderRequest():
     username = session['username']
     events = runQuery("SELECT * FROM events WHERE Club_Name = \'{}\';".format(username))
-    return render_template('showRequests.html',events = events)
+    rooms = runQuery("SELECT * FROM roombooking WHERE Club_Name = \'{}\';".format(username))
+    return render_template('showRequests.html',events = events, rooms = rooms)
 
 @app.route('/registerEvent',methods=['GET','POST'])
 def renderRegisterEvent():
